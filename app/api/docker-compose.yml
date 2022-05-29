@@ -1,0 +1,11 @@
+version: "3.7"
+
+services:
+  tms_ai:
+    container_name: tms_ai
+    image: tms_ai
+    ports:
+      - "5000:5000"
+    build:
+      context: .
+      dockerfile: Dockerfile
