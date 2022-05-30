@@ -23,12 +23,10 @@ class SvmManager:
 
         self.pipe = Pipeline([('vectorizer', self.vectorizer),
                               ('svc', SVC(cache_size=1000, probability=True))])
-
-        print(self.pipe.get_params().keys())
-
         self.param_grid = [{'svc__kernel': ('linear', 'rbf', 'poly', 'sigmoid'),
                             'svc__C': (1, 10, 100, 1000)}]
-        self.model: SVC = SVC()
+        self.model = None
+
         self.acc = 0
 
     def train(self, data: List[TrainData]) -> TrainInfo:
@@ -64,7 +62,7 @@ class SvmManager:
         }
 
     def info(self) -> dict:
-        return {'model': {'accuracy': self.acc, 'name': str(self.pipe['svc']), 'params': str(self.pipe['svc'].get_params())}}
+        return {'model': {'accuracy': self.acc, 'name': str(self.pipe['svc']), 'params': str(self.model.best_params_)}}
 
 
 def split_data(data: pd.DataFrame):
