@@ -19,14 +19,14 @@ SAVE_FILE = os.path.join(dirname, 'saves/model_manager.pkl')
 
 class SvmManager:
     def __init__(self):
-        self.vectorizer = TfidfVectorizer(stop_words=stop_words)
-
-        self.pipe = Pipeline([('vectorizer', self.vectorizer),
+        self.pipe = Pipeline([('vectorizer', TfidfVectorizer(stop_words=stop_words)),
                               ('svc', SVC(cache_size=1000, probability=True))])
+
+        print(self.pipe.get_params().keys())
+
         self.param_grid = [{'svc__kernel': ('linear', 'rbf', 'poly', 'sigmoid'),
                             'svc__C': (1, 10, 100, 1000)}]
         self.model = None
-
         self.acc = 0
 
     def train(self, data: List[TrainData]) -> TrainInfo:
@@ -62,7 +62,7 @@ class SvmManager:
         }
 
     def info(self) -> dict:
-        return {'model': {'accuracy': self.acc, 'name': str(self.pipe['svc']), 'params': str(self.model.best_params_)}}
+        return {'model': {'accuracy': self.acc, 'name': str(self.pipe['svc']), 'params': str(self.pipe['svc'].get_params())}}
 
 
 def split_data(data: pd.DataFrame):
